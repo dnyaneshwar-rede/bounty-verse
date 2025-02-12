@@ -9,10 +9,12 @@ import TrendingBountiesSection from "@/components/home/TrendingBountiesSection";
 import Navbar from "@/components/Navbar";
 
 
+
 export default function Home() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-900 via-gray-800 to-gray-900 text-gray-100">
     <Navbar />
+    
     <HeroSection />
     <CategoriesSection />
     <FeaturesSection />

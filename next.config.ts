@@ -1,7 +1,11 @@
+import withMDX from "@next/mdx";
 import type { NextConfig } from "next";
 
+// Define the Next.js configuration with MDX support and package transpilation
 const nextConfig: NextConfig = {
-  /* config options here */
+  transpilePackages: ["recharts"],
+  // additional configuration options can be added here
 };
 
-export default nextConfig;
+// Enhance the Next.js configuration with MDX support
+export default withMDX()(nextConfig);
