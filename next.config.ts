@@ -3,6 +3,11 @@ import type { NextConfig } from "next";
 
 // Define the Next.js configuration with MDX support and package transpilation
 const nextConfig: NextConfig = {
+
+  images: {
+    domains: ["avatars.githubusercontent.com"], // ✅ Allow GitHub avatars
+  },
+  
   transpilePackages: ["recharts"],
   // additional configuration options can be added here
 };

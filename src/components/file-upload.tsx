@@ -1,33 +1,24 @@
-// components/file-upload.tsx
 "use client";
+
 import { UploadButton } from "@uploadthing/react";
+import type { OurFileRouter } from "@/server/uploadthing"; // Ensure correct import for your UploadThing setup
+import type { UploadResponse } from "@/server/uploadthing"; // Adjust this import based on your actual response type
 
-// Define the expected response type from the upload
-interface UploadResponse {
-  url: string;
-}
-
-// Define the expected input type for the upload
-interface UploadInput {
-  // Define the properties that your upload input should have
-  file: File; // Example property, adjust according to your needs
-}
-
-export function FileUpload({
-  onChange,
-}: {
+interface FileUploadProps {
   onChange: (urls: string[]) => void;
-}) {
-  const handleUploadComplete = (res: UploadResponse[]) => {
-    onChange(res.map((file) => file.url));
+}
+
+export function FileUpload({ onChange }: FileUploadProps): JSX.Element {
+  const handleUploadComplete = (res: UploadResponse[]): void => {
+    onChange(res.map(({ url }) => url));
   };
 
-  const handleUploadError = (error: Error) => {
+  const handleUploadError = (error: Error): void => {
     console.error("Upload error:", error);
   };
 
   return (
-    <UploadButton<UploadInput, UploadResponse>
+    <UploadButton<OurFileRouter, UploadResponse>
       endpoint="bountyAttachment"
       onClientUploadComplete={handleUploadComplete}
       onUploadError={handleUploadError}

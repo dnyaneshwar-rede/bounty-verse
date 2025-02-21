@@ -12,10 +12,18 @@ import { motion } from "framer-motion";
 import { useState } from "react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import Link from "next/link";
+import { useSession, signOut ,   } from "next-auth/react";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
-const Navbar = () => {
+const Navbar =  () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const isMobile = useIsMobile();
+  const { data: session } = useSession();
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
@@ -37,6 +45,7 @@ const Navbar = () => {
             <>
               <NavigationMenu>
                 <NavigationMenuList>
+                  {/* ... existing menu items ... */}
                   <NavigationMenuItem>
                     <NavigationMenuLink
                       className={navigationMenuTriggerStyle()}
@@ -69,10 +78,74 @@ const Navbar = () => {
               </NavigationMenu>
 
               <div className="flex items-center gap-4">
-                <Button variant="ghost">Sign In</Button>
-                <Button className="bg-gradient-to-r from-purple-500 via-pink-500 to-orange-500">
-                  Get Started
-                </Button>
+                {session?.user ? (
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <Button
+                        variant="ghost"
+                        className="flex items-center gap-2 hover:bg-gray-800/50"
+                      >
+                        <Avatar className="h-8 w-8">
+                          <AvatarImage src={session.user.image ?? undefined} />
+                          <AvatarFallback>
+                            {session.user.name?.[0] || session.user.email?.[0]}
+                          </AvatarFallback>
+                        </Avatar>
+                        <span className="text-gray-200 max-w-[120px] truncate">
+                          {session.user.name || session.user.email}
+                        </span>
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-48 p-2 bg-gray-800 border-gray-700">
+                      <Link href="/account/profile">
+                        <Button
+                          //onClick={() => signOut()}
+                          variant="ghost"
+                          className="w-full justify-start text-red-400 hover:bg-gray-700/50"
+                        >
+                          Profile
+                        </Button>
+                      </Link>
+                      <Link href="/account/profile/edit">
+                        <Button
+                          //onClick={() => signOut()}
+                          variant="ghost"
+                          className="w-full justify-start text-red-400 hover:bg-gray-700/50"
+                        >
+                           Edit Profile
+                        </Button>
+                      </Link>
+
+                      
+                      <Button
+                        onClick={() => signOut()}
+                        variant="ghost"
+                        className="w-full justify-start text-red-400 hover:bg-gray-700/50"
+                      >
+                        Notification
+                      </Button>
+
+                      <Button
+                        onClick={() => signOut()}
+                        variant="ghost"
+                        className="w-full justify-start text-red-400 hover:bg-gray-700/50"
+                      >
+                        Sign Out
+                      </Button>
+                    </PopoverContent>
+                  </Popover>
+                ) : (
+                  <>
+                    <Link href="/sign-in">
+                      <Button variant="ghost">Sign In</Button>
+                    </Link>
+                    <Link href="/get-started">
+                      <Button className="bg-gradient-to-r from-purple-500 via-pink-500 to-orange-500">
+                        Get Started
+                      </Button>
+                    </Link>
+                  </>
+                )}
               </div>
             </>
           ) : (
@@ -102,20 +175,14 @@ const Navbar = () => {
           >
             <div className="py-4 space-y-4">
               <nav className="flex flex-col space-y-2">
+                {/* ... existing mobile menu items ... */}
                 <a
                   href="#"
                   className="px-4 py-2 text-gray-300 hover:text-white hover:bg-gray-800/50 rounded-lg transition-colors"
                 >
                   Bounties
                 </a>
-                <Link
-                  href="/bounties"
-                  passHref
-                  className="px-4 py-2 text-gray-300 hover:text-white hover:bg-gray-800/50 rounded-lg transition-colors "
-                >
-                  {" "}
-                  <Button className="w-full">Bounties</Button>
-                </Link>
+
                 <a
                   href="#"
                   className="px-4 py-2 text-gray-300 hover:text-white hover:bg-gray-800/50 rounded-lg transition-colors"
@@ -135,16 +202,28 @@ const Navbar = () => {
                   Companies
                 </a>
               </nav>
-              <div className="flex flex-col space-y-2 px-4">
-                <Link href="/auth/signin">
-                  <Button variant="ghost" className="w-full justify-center">
-                    Sign In
+              <div className="flex flex-col space-y-2 px-4 ">
+                {session?.user ? (
+                  <Button
+                    onClick={() => signOut()}
+                    className="w-full justify-center bg-red-500/20 text-red-400 hover:bg-red-500/30"
+                  >
+                    Sign Out
                   </Button>
-                </Link>
-
-                <Button className="w-full justify-center bg-gradient-to-r from-purple-500 via-pink-500 to-orange-500">
-                  Get Started
-                </Button>
+                ) : (
+                  <>
+                    <Link href="/auth/signin">
+                      <Button variant="ghost" className="w-full justify-center">
+                        Sign In
+                      </Button>
+                    </Link>
+                    <Link href="/get-started">
+                      <Button className="w-full justify-center bg-gradient-to-r from-purple-500 via-pink-500 to-orange-500">
+                        Get Started
+                      </Button>
+                    </Link>
+                  </>
+                )}
               </div>
             </div>
           </motion.div>

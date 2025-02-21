@@ -18,7 +18,7 @@ import { NavMain } from "./NavMain";
 import { NavProjects } from "./NavProjects";
 import { NavUser } from "./NavUser";
 import { TeamSwitcher } from "./Team-switcher";
-import PostForm from "@/components/PostForm"
+
 import {
   Sidebar,
   SidebarContent,
